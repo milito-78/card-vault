@@ -74,7 +74,7 @@ npm install nativewind tailwindcss
 ## Phase 2: Core Features (Week 2)
 
 ### Step 2.1: Card Service
-- [ ] Create `services/cards.ts`
+- [x] Create `services/cards.ts`
 - [ ] Implement `getCards()`, `addCard()`, `updateCard()`, `deleteCard()`
 - [ ] All operations go through auth service (decrypted key in memory)
 
@@ -86,16 +86,16 @@ npm install nativewind tailwindcss
 - [ ] FAB or header button to add card
 
 ### Step 2.3: Card Detail Screen
-- [ ] Create `app/card/[id].tsx`
-- [ ] Show all fields with tap-to-reveal for sensitive data
-- [ ] Copy button for card number (with auto-clear)
-- [ ] Edit and Delete actions
+- [x] Create `app/card/[id].tsx`
+- [x] Show all fields with tap-to-reveal for sensitive data
+- [x] Copy button for card number (with auto-clear)
+- [x] Edit and Delete actions
 
 ### Step 2.4: Add/Edit Card Form
-- [ ] Create `app/card/add.tsx`
-- [ ] Form: bank name, card number, CVV2, expiry (MM/YY), password
-- [ ] Validation (card number format, expiry format)
-- [ ] Reuse form for edit in `app/card/[id].tsx`
+- [x] Create `app/card/add.tsx`
+- [x] Form: bank name, card number, CVV2, expiry (MM/YY), password
+- [x] Validation (card number format, expiry format)
+- [x] Reuse form for edit in `app/card/[id]/edit.tsx`
 
 ### Step 2.5: Data Model
 - [ ] Define `Card` interface (id, bankName, cardNumber, cvv2, expDate, password, createdAt)
@@ -106,29 +106,29 @@ npm install nativewind tailwindcss
 ## Phase 3: Polish (Week 3)
 
 ### Step 3.1: Auto-Lock
-- [ ] Use `AppState` to detect background
+- [x] Use `AppState` to detect background
 - [ ] Start timer when app goes to background
 - [ ] Lock app when timer expires (e.g. 60 seconds)
 - [ ] Clear decrypted data from memory on lock
 
 ### Step 3.2: Copy with Auto-Clear
-- [ ] Copy to clipboard on button press
+- [x] Copy to clipboard on button press
 - [ ] Clear clipboard after 30–60 seconds (timer)
 - [ ] Show toast/feedback when copied
 
 ### Step 3.3: Search
-- [ ] Add search input to card list
+- [x] Add search input to card list
 - [ ] Filter by bank name or last 4 digits
 
 ### Step 3.4: Change PIN
-- [ ] Create settings screen or section
+- [x] Create settings screen or section
 - [ ] Require current PIN
 - [ ] New PIN + confirm
 - [ ] Re-encrypt `data_key_encrypted` with new PIN-derived key
 - [ ] Update `data_key_biometric` if needed
 
 ### Step 3.5: Settings Screen
-- [ ] Create `app/(tabs)/settings.tsx`
+- [x] Create `app/(tabs)/settings.tsx`
 - [ ] Auto-lock timeout options (30s, 60s, 5min, never)
 - [ ] Change PIN
 - [ ] App info / version

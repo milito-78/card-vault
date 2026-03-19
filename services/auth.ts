@@ -98,3 +98,34 @@ export async function unlockWithBiometric(): Promise<boolean> {
     return false;
   }
 }
+
+export async function changePin(currentPin: string, newPin: string): Promise<boolean> {
+  if (!inMemoryDataKey) return false;
+
+  const salt = await storage.getSalt();
+  if (!salt) return false;
+
+  const currentPinKey = await deriveKeyFromPin(currentPin, salt);
+  const wrappedKey = await storage.getDataKeyEncrypted();
+  if (!wrappedKey) return false;
+
+  try {
+    const dataKey = await unwrapKey(wrappedKey, currentPinKey);
+    const newSalt = await generateSalt();
+    await storage.setSalt(newSalt);
+
+    const newPinKey = await deriveKeyFromPin(newPin, newSalt);
+    const newWrappedKey = await wrapKey(dataKey, newPinKey);
+    await storage.setDataKeyEncrypted(newWrappedKey);
+
+    const dataKeyHex = await dataKey.encoded('hex');
+    try {
+      await storage.setDataKeyBiometric(dataKeyHex);
+    } catch {
+      // Biometric storage optional
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}

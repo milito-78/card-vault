@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 import * as auth from '@/services/auth';
+import * as storage from '@/services/storage';
 
 type AuthState = 'loading' | 'setup' | 'locked' | 'unlocked';
 
@@ -9,6 +11,7 @@ interface AuthContextType {
   unlockWithPin: (pin: string) => Promise<boolean>;
   unlockWithBiometric: () => Promise<boolean>;
   lock: () => void;
+  changePin: (currentPin: string, newPin: string) => Promise<boolean>;
   canUseBiometric: boolean;
 }
 
@@ -21,6 +24,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  const lockTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (authState !== 'unlocked') return;
+
+    const handleAppStateChange = async (nextState: AppStateStatus) => {
+      if (nextState === 'background' || nextState === 'inactive') {
+        const timeout = await storage.getAutoLockTimeout();
+        if (timeout > 0) {
+          if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
+          lockTimeoutRef.current = setTimeout(() => {
+            auth.lock();
+            setAuthState('locked');
+            lockTimeoutRef.current = null;
+          }, timeout * 1000);
+        }
+      } else if (nextState === 'active') {
+        if (lockTimeoutRef.current) {
+          clearTimeout(lockTimeoutRef.current);
+          lockTimeoutRef.current = null;
+        }
+      }
+    };
+
+    const sub = AppState.addEventListener('change', (s) => handleAppStateChange(s));
+
+    return () => {
+      sub.remove();
+      if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
+    };
+  }, [authState]);
 
   async function checkAuth() {
     const setupComplete = await auth.isSetupComplete();
@@ -70,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         unlockWithPin,
         unlockWithBiometric,
         lock,
+        changePin: auth.changePin,
         canUseBiometric,
       }}
     >

@@ -8,7 +8,15 @@ const KEYS = {
   DATA_KEY_ENCRYPTED: 'data_key_encrypted',
   DATA_KEY_BIOMETRIC: 'data_key_biometric',
   CARDS_ENCRYPTED: 'cards_encrypted',
+  AUTO_LOCK_TIMEOUT: 'auto_lock_timeout',
 } as const;
+
+export const AUTO_LOCK_OPTIONS = [
+  { value: 30, label: '30 seconds' },
+  { value: 60, label: '1 minute' },
+  { value: 300, label: '5 minutes' },
+  { value: 0, label: 'Never' },
+] as const;
 
 const PREFIX = 'cardvault_';
 
@@ -103,4 +111,15 @@ export async function setCardsEncrypted(value: string): Promise<void> {
 
 export async function clearDataKeyBiometric(): Promise<void> {
   await deleteItem(KEYS.DATA_KEY_BIOMETRIC);
+}
+
+export async function getAutoLockTimeout(): Promise<number> {
+  const value = await getItem(KEYS.AUTO_LOCK_TIMEOUT);
+  if (!value) return 60;
+  const n = parseInt(value, 10);
+  return isNaN(n) ? 60 : n;
+}
+
+export async function setAutoLockTimeout(seconds: number): Promise<void> {
+  await setItem(KEYS.AUTO_LOCK_TIMEOUT, String(seconds));
 }

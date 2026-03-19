@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest"
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0",
@@ -38,7 +39,10 @@
     "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/react": "~19.2.2",
+    "jest": "^29.7.0",
+    "jest-expo": "~55.0.0",
     "typescript": "~5.9.2"
   },
   "private": true

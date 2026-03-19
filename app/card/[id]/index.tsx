@@ -8,13 +8,14 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import * as Clipboard from 'expo-clipboard';
 import { getCards, deleteCard, maskCardNumber } from '@/services/cards';
 import type { Card } from '@/services/cards';
+import { useCopyWithClear } from '@/hooks/useCopyWithClear';
 
 export default function CardDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { copyWithClear } = useCopyWithClear();
   const [card, setCard] = useState<Card | null>(null);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
 
@@ -34,8 +35,7 @@ export default function CardDetailScreen() {
   }
 
   async function handleCopy(value: string, label = 'Value') {
-    await Clipboard.setStringAsync(value);
-    Alert.alert('Copied', `${label} copied to clipboard`);
+    await copyWithClear(value, label);
   }
 
   function handleDelete() {
@@ -67,8 +67,18 @@ export default function CardDetailScreen() {
 
   return (
     <ScrollView className="flex-1 bg-neutral-900">
-      <View className="border-b border-neutral-800 px-4 py-4">
+      <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
         <Text className="text-xl font-bold text-white">{card.bankName}</Text>
+        <Pressable
+          onPress={() => router.push(`/card/${id}/edit`)}
+          className="rounded-lg px-3 py-2 active:bg-neutral-700"
+        >
+          <SymbolView
+            name={{ ios: 'pencil', android: 'edit', web: 'edit' }}
+            size={22}
+            tintColor="#a3a3a3"
+          />
+        </Pressable>
       </View>
 
       <View className="p-4">
