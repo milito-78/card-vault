@@ -39,7 +39,6 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "@sentry/react-native/expo",
       "expo-router",
       [
         "expo-secure-store",
@@ -73,8 +72,7 @@
             }
           ]
         }
-      ],
-      "@sentry/react-native"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
