@@ -57,6 +57,10 @@
   },
   "settings": {
     "title": "Settings",
+    "language": "Language",
+    "english": "English",
+    "arabic": "Arabic",
+    "persian": "فارسی",
     "autoLockTimeout": "Auto-Lock Timeout",
     "sortBy": "Sort Cards By",
     "sortOrder": "Sort Order",

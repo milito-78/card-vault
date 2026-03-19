@@ -11,6 +11,7 @@ const KEYS = {
   AUTO_LOCK_TIMEOUT: 'auto_lock_timeout',
   SORT_BY: 'sort_by',
   SORT_ORDER: 'sort_order',
+  LOCALE: 'locale',
 } as const;
 
 export type SortBy = 'bankName' | 'createdAt';
@@ -147,4 +148,15 @@ export async function setSortPreference(
 ): Promise<void> {
   await setItem(KEYS.SORT_BY, sortBy);
   await setItem(KEYS.SORT_ORDER, sortOrder);
+}
+
+export type Locale = 'en' | 'ar' | 'fa';
+
+export async function getLocale(): Promise<Locale | null> {
+  const value = await getItem(KEYS.LOCALE);
+  return value === 'en' || value === 'ar' || value === 'fa' ? value : null;
+}
+
+export async function setLocale(locale: Locale): Promise<void> {
+  await setItem(KEYS.LOCALE, locale);
 }

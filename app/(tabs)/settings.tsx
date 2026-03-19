@@ -22,7 +22,7 @@ import {
 import Constants from 'expo-constants';
 
 export default function SettingsScreen() {
-  const { t } = useLocale();
+  const { t, locale, setLocale } = useLocale();
   const { lock, changePin } = useAuth();
   const [autoLockTimeout, setAutoLockTimeout] = useState(60);
   const [loadingTimeout, setLoadingTimeout] = useState(true);
@@ -225,6 +225,37 @@ export default function SettingsScreen() {
   return (
     <ScrollView className="flex-1 bg-neutral-900 p-4">
       <Text className="mb-6 text-xl font-bold text-white">{t('settings.title')}</Text>
+
+      <Text className="mb-2 text-sm font-medium text-neutral-400">
+        {t('settings.language')}
+      </Text>
+      <View className="mb-6 flex-row flex-wrap gap-2">
+        {(['en', 'ar', 'fa'] as const).map((loc) => (
+          <Pressable
+            key={loc}
+            onPress={() => setLocale(loc)}
+            className={`rounded-xl border px-4 py-2 ${
+              locale === loc
+                ? 'border-blue-500 bg-blue-500/20'
+                : 'border-neutral-700 bg-neutral-800'
+            }`}
+          >
+            <Text
+              className={
+                locale === loc
+                  ? 'font-medium text-blue-400'
+                  : 'text-neutral-300'
+              }
+            >
+              {loc === 'en'
+                ? t('settings.english')
+                : loc === 'ar'
+                  ? t('settings.arabic')
+                  : t('settings.persian')}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
       <Text className="mb-2 text-sm font-medium text-neutral-400">
         {t('settings.autoLockTimeout')}

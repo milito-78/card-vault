@@ -57,6 +57,10 @@
   },
   "settings": {
     "title": "الإعدادات",
+    "language": "اللغة",
+    "english": "English",
+    "arabic": "العربية",
+    "persian": "فارسی",
     "autoLockTimeout": "مهلة القفل التلقائي",
     "sortBy": "ترتيب البطاقات حسب",
     "sortOrder": "ترتيب",
