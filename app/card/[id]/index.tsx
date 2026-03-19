@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   Alert,
+  Platform,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
@@ -41,23 +42,26 @@ export default function CardDetailScreen() {
     await copyWithClear(value, label);
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!card) return;
-    Alert.alert(
-      'Delete Card',
-      `Are you sure you want to delete ${card.bankName}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteCard(card.id);
-            router.back();
-          },
-        },
-      ]
-    );
+    const message = `Are you sure you want to delete ${card.bankName}?`;
+    const confirmed =
+      Platform.OS === 'web'
+        ? window.confirm(message)
+        : await new Promise<boolean>((resolve) => {
+            Alert.alert('Delete Card', message, [
+              { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+              {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: () => resolve(true),
+              },
+            ]);
+          });
+    if (confirmed) {
+      await deleteCard(card.id);
+      router.back();
+    }
   }
 
   if (!card) {

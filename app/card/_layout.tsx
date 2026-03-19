@@ -10,7 +10,7 @@ export default function CardLayout() {
       }}
     >
       <Stack.Screen name="add" options={{ title: 'Add Card' }} />
-      <Stack.Screen name="[id]" options={{ title: 'Card Details' }} />
+      <Stack.Screen name="[id]" options={{ headerShown: false }} />
     </Stack>
   );
 }
