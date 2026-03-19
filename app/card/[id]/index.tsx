@@ -9,6 +9,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { getCards, deleteCard, maskCardNumber } from '@/services/cards';
+import { BankLogo } from '@/components/BankLogo';
 import type { Card } from '@/services/cards';
 import { useCopyWithClear } from '@/hooks/useCopyWithClear';
 import { useLocale } from '@/contexts/LocaleContext';
@@ -70,7 +71,10 @@ export default function CardDetailScreen() {
   return (
     <ScrollView className="flex-1 bg-neutral-900">
       <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
-        <Text className="text-xl font-bold text-white">{card.bankName}</Text>
+        <View className="flex-row items-center gap-3">
+          <BankLogo cardNumber={card.cardNumber} size={48} />
+          <Text className="text-xl font-bold text-white">{card.bankName}</Text>
+        </View>
         <Pressable
           onPress={() => router.push(`/card/${id}/edit`)}
           className="rounded-lg px-3 py-2 active:bg-neutral-700"

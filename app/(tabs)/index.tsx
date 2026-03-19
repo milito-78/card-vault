@@ -10,6 +10,7 @@ import {
 import { Link, useFocusEffect } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { getCards, maskCardNumber, type Card } from '@/services/cards';
+import { BankLogo } from '@/components/BankLogo';
 import * as storage from '@/services/storage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocale } from '@/contexts/LocaleContext';
@@ -69,7 +70,9 @@ export default function CardListScreen() {
   function renderCard({ item }: { item: Card }) {
     return (
       <Link href={`/card/${item.id}`} asChild>
-        <Pressable className="mb-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:opacity-80">
+        <Pressable className="mb-3 flex-row items-center gap-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:opacity-80">
+          <BankLogo cardNumber={item.cardNumber} size={44} />
+          <View className="flex-1">
           <Text className="text-lg font-semibold text-white">
             {item.bankName}
           </Text>
@@ -79,6 +82,7 @@ export default function CardListScreen() {
           <Text className="mt-1 text-sm text-neutral-500">
             {t('cards.exp')}: {item.expDate}
           </Text>
+          </View>
         </Pressable>
       </Link>
     );
