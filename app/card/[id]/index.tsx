@@ -13,6 +13,7 @@ import { getCards, deleteCard, maskCardNumber } from '@/services/cards';
 import { BankLogo } from '@/components/BankLogo';
 import type { Card } from '@/services/cards';
 import { useCopyWithClear } from '@/hooks/useCopyWithClear';
+import { useCardsRefresh } from '@/contexts/CardsRefreshContext';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function CardDetailScreen() {
@@ -20,6 +21,7 @@ export default function CardDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { copyWithClear } = useCopyWithClear();
+  const { refreshCards } = useCardsRefresh();
   const [card, setCard] = useState<Card | null>(null);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
 
@@ -60,6 +62,7 @@ export default function CardDetailScreen() {
           });
     if (confirmed) {
       await deleteCard(card.id);
+      refreshCards();
       router.back();
     }
   }
@@ -73,7 +76,10 @@ export default function CardDetailScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-neutral-900">
+    <ScrollView
+        className="flex-1 bg-neutral-900"
+        keyboardShouldPersistTaps="handled"
+      >
       <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
         <View className="flex-row items-center gap-3">
           <BankLogo cardNumber={card.cardNumber} size={48} />

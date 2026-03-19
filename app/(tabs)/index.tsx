@@ -12,11 +12,14 @@ import { SymbolView } from 'expo-symbols';
 import { getCards, maskCardNumber, type Card } from '@/services/cards';
 import { BankLogo } from '@/components/BankLogo';
 import * as storage from '@/services/storage';
+import { debugLog } from '@/services/debugLog';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCardsRefresh } from '@/contexts/CardsRefreshContext';
 import { useLocale } from '@/contexts/LocaleContext';
 
 export default function CardListScreen() {
   const { t } = useLocale();
+  const { refreshTrigger } = useCardsRefresh();
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,14 +29,17 @@ export default function CardListScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      debugLog('CardList: useFocusEffect triggered');
       loadCards();
       loadSortPreference();
-    }, [])
+    }, [refreshTrigger])
   );
 
   async function loadCards() {
+    debugLog('CardList: loadCards start');
     setLoading(true);
     const data = await getCards();
+    debugLog('CardList: loadCards got', data.length, 'cards');
     setCards(data);
     setLoading(false);
   }

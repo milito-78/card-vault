@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { debugLog, debugLogError } from './debugLog';
 
 const KEYS = {
   SETUP_COMPLETE: 'setup_complete',
@@ -36,7 +37,12 @@ async function getItem(key: string, secureOptions?: object): Promise<string | nu
   if (secureOptions && 'requireAuthentication' in secureOptions) {
     return SecureStore.getItemAsync(key, secureOptions as any);
   }
-  return SecureStore.getItemAsync(key);
+  // Use explicit options for read/write consistency across platforms
+  const options =
+    Platform.OS === 'ios'
+      ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
+      : { keychainService: 'key_v1' }; // Android: explicit keychain to match default
+  return SecureStore.getItemAsync(key, options);
 }
 
 async function setItem(key: string, value: string, secureOptions?: object): Promise<void> {
@@ -48,7 +54,12 @@ async function setItem(key: string, value: string, secureOptions?: object): Prom
     await SecureStore.setItemAsync(key, value, secureOptions as any);
     return;
   }
-  await SecureStore.setItemAsync(key, value);
+  // Use explicit options for read/write consistency across platforms
+  const options =
+    Platform.OS === 'ios'
+      ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
+      : { keychainService: 'key_v1' }; // Android: explicit keychain to match default
+  await SecureStore.setItemAsync(key, value, options);
 }
 
 async function deleteItem(key: string): Promise<void> {
@@ -86,10 +97,13 @@ export async function setDataKeyEncrypted(value: string): Promise<void> {
 
 export async function getDataKeyBiometric(): Promise<string | null> {
   if (isWeb) return getItem(KEYS.DATA_KEY_BIOMETRIC); // No biometric on web
-  return SecureStore.getItemAsync(KEYS.DATA_KEY_BIOMETRIC, {
-    requireAuthentication: true,
-    authenticationPrompt: 'Authenticate to unlock Card Vault',
-  });
+  // No requireAuthentication - we already authenticated via LocalAuthentication
+  // before calling this. Avoids double fingerprint prompt.
+  const options =
+    Platform.OS === 'ios'
+      ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
+      : undefined;
+  return SecureStore.getItemAsync(KEYS.DATA_KEY_BIOMETRIC, options);
 }
 
 export async function setDataKeyBiometric(value: string): Promise<void> {
@@ -98,21 +112,37 @@ export async function setDataKeyBiometric(value: string): Promise<void> {
     return;
   }
   try {
-    await SecureStore.setItemAsync(KEYS.DATA_KEY_BIOMETRIC, value, {
-      requireAuthentication: true,
-      authenticationPrompt: 'Authenticate to save',
-    });
+    // No requireAuthentication - user already passed setup. Avoids double prompt
+    const options =
+      Platform.OS === 'ios'
+        ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
+        : undefined;
+    await SecureStore.setItemAsync(KEYS.DATA_KEY_BIOMETRIC, value, options);
   } catch {
     // Biometric storage optional
   }
 }
 
 export async function getCardsEncrypted(): Promise<string | null> {
-  return getItem(KEYS.CARDS_ENCRYPTED);
+  try {
+    const v = await getItem(KEYS.CARDS_ENCRYPTED);
+    debugLog('getCardsEncrypted: key=', KEYS.CARDS_ENCRYPTED, 'platform=', Platform.OS, 'len=', v?.length ?? 0);
+    return v;
+  } catch (e) {
+    debugLogError('getCardsEncrypted', e);
+    throw e;
+  }
 }
 
 export async function setCardsEncrypted(value: string): Promise<void> {
-  await setItem(KEYS.CARDS_ENCRYPTED, value);
+  debugLog('setCardsEncrypted: key=', KEYS.CARDS_ENCRYPTED, 'platform=', Platform.OS, 'len=', value.length);
+  try {
+    await setItem(KEYS.CARDS_ENCRYPTED, value);
+    debugLog('setCardsEncrypted: write ok');
+  } catch (e) {
+    debugLogError('setCardsEncrypted', e);
+    throw e;
+  }
 }
 
 export async function clearDataKeyBiometric(): Promise<void> {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,8 @@ export default function LockScreen() {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const biometricTriedRef = useRef(false);
+  const prevAuthRef = useRef(authState);
 
   useEffect(() => {
     if (authState === 'setup') {
@@ -34,7 +36,12 @@ export default function LockScreen() {
       router.replace('/(tabs)');
       return;
     }
-    if (authState === 'locked' && canUseBiometric && !loading) {
+    if (prevAuthRef.current === 'unlocked' && authState === 'locked') {
+      biometricTriedRef.current = false; // Reset when returning from background
+    }
+    prevAuthRef.current = authState;
+    if (authState === 'locked' && canUseBiometric && !biometricTriedRef.current) {
+      biometricTriedRef.current = true;
       tryBiometric();
     }
   }, [authState, canUseBiometric]);
@@ -117,6 +124,7 @@ export default function LockScreen() {
               onPress={handleUnlock}
               disabled={loading || pin.length < 6}
               className="rounded-xl bg-blue-600 py-4 active:bg-blue-500 disabled:opacity-50"
+              style={{ minHeight: 48 }}
             >
               {loading ? (
                 <ActivityIndicator color="white" />
@@ -132,6 +140,7 @@ export default function LockScreen() {
                 onPress={tryBiometric}
                 disabled={loading}
                 className="py-3 active:opacity-70"
+                style={{ minHeight: 44 }}
               >
                 <Text className="text-blue-400 text-center text-sm">
                   {t('auth.useBiometric')}

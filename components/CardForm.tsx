@@ -90,7 +90,11 @@ export function CardForm({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1 bg-neutral-900"
     >
-      <ScrollView className="flex-1" contentContainerStyle={{ padding: 16 }}>
+      <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ padding: 16 }}
+          keyboardShouldPersistTaps="handled"
+        >
         <Text className="mb-2 text-sm font-medium text-neutral-400">
           {t('cardForm.bankName')}
         </Text>

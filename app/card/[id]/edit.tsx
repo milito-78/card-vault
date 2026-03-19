@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CardForm } from '@/components/CardForm';
 import { getCards, updateCard } from '@/services/cards';
+import { useCardsRefresh } from '@/contexts/CardsRefreshContext';
 import { useLocale } from '@/contexts/LocaleContext';
 import type { Card } from '@/services/cards';
 
@@ -10,6 +11,7 @@ export default function EditCardScreen() {
   const { t } = useLocale();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { refreshCards } = useCardsRefresh();
   const [card, setCard] = useState<Card | null>(null);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function EditCardScreen() {
   async function handleSubmit(data: Omit<Card, 'id' | 'createdAt'>) {
     if (!id) return;
     await updateCard(id, data);
+    refreshCards();
     router.back();
   }
 

@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocale } from '@/contexts/LocaleContext';
 import { router } from 'expo-router';
@@ -20,6 +21,7 @@ import {
   type SortOrder,
 } from '@/services/storage';
 import Constants from 'expo-constants';
+import { getDebugLogContent } from '@/services/debugLog';
 
 export default function SettingsScreen() {
   const { t, locale, setLocale } = useLocale();
@@ -223,7 +225,10 @@ export default function SettingsScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-neutral-900 p-4">
+    <ScrollView
+        className="flex-1 bg-neutral-900 p-4"
+        keyboardShouldPersistTaps="handled"
+      >
       <Text className="mb-6 text-xl font-bold text-white">{t('settings.title')}</Text>
 
       <Text className="mb-2 text-sm font-medium text-neutral-400">
@@ -690,6 +695,20 @@ export default function SettingsScreen() {
         <Text className="text-sm text-neutral-500">
           Card Vault v{Constants.expoConfig?.version ?? '1.0.0'}
         </Text>
+        <Pressable
+          onPress={async () => {
+            const log = getDebugLogContent();
+            if (log) {
+              await Clipboard.setStringAsync(log);
+              Alert.alert('Debug log copied', 'Paste somewhere to share.');
+            } else {
+              Alert.alert('Debug log empty', 'Add a card first, then try again.');
+            }
+          }}
+          className="mt-2 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
+        >
+          <Text className="text-center text-sm text-neutral-400">Copy debug log</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );

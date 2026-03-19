@@ -2,6 +2,7 @@ import { AESEncryptionKey } from 'expo-crypto';
 import { encryptData, decryptData } from './encryption';
 import * as storage from './storage';
 import { getDataKey } from './auth';
+import { debugLog, debugLogError } from './debugLog';
 
 export interface Card {
   id: string;
@@ -20,16 +21,27 @@ function generateId(): string {
 
 export async function getCards(): Promise<Card[]> {
   const dataKey = getDataKey();
-  if (!dataKey) return [];
+  debugLog('getCards: dataKey exists?', !!dataKey);
+  if (!dataKey) {
+    debugLog('getCards: no dataKey, returning []');
+    return [];
+  }
 
   const encrypted = await storage.getCardsEncrypted();
-  if (!encrypted) return [];
+  debugLog('getCards: encrypted length', encrypted?.length ?? 0);
+  if (!encrypted) {
+    debugLog('getCards: no encrypted data, returning []');
+    return [];
+  }
 
   try {
     const json = await decryptData(encrypted, dataKey);
     const parsed = JSON.parse(json) as Card[];
-    return parsed.map((c) => ({ ...c, notes: c.notes ?? '' }));
-  } catch {
+    const cards = parsed.map((c) => ({ ...c, notes: c.notes ?? '' }));
+    debugLog('getCards: decrypted', cards.length, 'cards');
+    return cards;
+  } catch (e) {
+    debugLogError('getCards decrypt', e);
     return [];
   }
 }
@@ -44,14 +56,20 @@ async function saveCards(cards: Card[]): Promise<void> {
 }
 
 export async function addCard(card: Omit<Card, 'id' | 'createdAt'>): Promise<Card> {
+  debugLog('addCard: start', card.bankName);
   const cards = await getCards();
+  debugLog('addCard: existing cards count', cards.length);
   const newCard: Card = {
     ...card,
     id: generateId(),
     createdAt: Date.now(),
   };
   cards.push(newCard);
+  debugLog('addCard: saving', cards.length, 'cards');
   await saveCards(cards);
+  debugLog('addCard: save complete, verifying...');
+  const verify = await storage.getCardsEncrypted();
+  debugLog('addCard: verify read length', verify?.length ?? 0);
   return newCard;
 }
 
