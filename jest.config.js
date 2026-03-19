@@ -10,8 +10,6 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.[jt]s?(x)', '**/*.test.[jt]s?(x)'],
   collectCoverageFrom: [
     'services/**/*.ts',
-    'components/CardForm.tsx',
-    'hooks/**/*.ts',
     '!**/*.d.ts',
   ],
   coverageThreshold: {

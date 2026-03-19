@@ -1,16 +1,10 @@
 /**
  * Storage service tests
+ * Platform is mocked as 'ios' in setup, so storage uses SecureStore
  */
 
 import * as storage from '@/services/storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-
-jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-}));
 
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
@@ -28,19 +22,19 @@ describe('AUTO_LOCK_OPTIONS', () => {
 
 describe('isSetupComplete', () => {
   it('returns true when value is "true"', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('true');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('true');
     const result = await storage.isSetupComplete();
     expect(result).toBe(true);
   });
 
   it('returns false when value is not "true"', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('false');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('false');
     const result = await storage.isSetupComplete();
     expect(result).toBe(false);
   });
 
   it('returns false when value is null', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
     const result = await storage.isSetupComplete();
     expect(result).toBe(false);
   });
@@ -49,19 +43,19 @@ describe('isSetupComplete', () => {
 describe('setSetupComplete', () => {
   it('calls setItem with correct key', async () => {
     await storage.setSetupComplete();
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith('cardvault_setup_complete', 'true');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('setup_complete', 'true');
   });
 });
 
 describe('getSalt', () => {
   it('returns salt from storage', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('abc123');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('abc123');
     const result = await storage.getSalt();
     expect(result).toBe('abc123');
   });
 
   it('returns null when not set', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
     const result = await storage.getSalt();
     expect(result).toBeNull();
   });
@@ -70,13 +64,13 @@ describe('getSalt', () => {
 describe('setSalt', () => {
   it('stores salt', async () => {
     await storage.setSalt('mysalt');
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith('cardvault_salt', 'mysalt');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('salt', 'mysalt');
   });
 });
 
 describe('getDataKeyEncrypted', () => {
   it('returns encrypted key from storage', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('encryptedkey');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('encryptedkey');
     const result = await storage.getDataKeyEncrypted();
     expect(result).toBe('encryptedkey');
   });
@@ -85,13 +79,13 @@ describe('getDataKeyEncrypted', () => {
 describe('setDataKeyEncrypted', () => {
   it('stores encrypted key', async () => {
     await storage.setDataKeyEncrypted('wrapped');
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith('cardvault_data_key_encrypted', 'wrapped');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('data_key_encrypted', 'wrapped');
   });
 });
 
 describe('getCardsEncrypted', () => {
   it('returns encrypted cards from storage', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('encryptedcards');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('encryptedcards');
     const result = await storage.getCardsEncrypted();
     expect(result).toBe('encryptedcards');
   });
@@ -100,32 +94,32 @@ describe('getCardsEncrypted', () => {
 describe('setCardsEncrypted', () => {
   it('stores encrypted cards', async () => {
     await storage.setCardsEncrypted('encrypted');
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith('cardvault_cards_encrypted', 'encrypted');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('cards_encrypted', 'encrypted');
   });
 });
 
 describe('clearDataKeyBiometric', () => {
   it('removes biometric key', async () => {
     await storage.clearDataKeyBiometric();
-    expect(AsyncStorage.removeItem).toHaveBeenCalledWith('cardvault_data_key_biometric');
+    expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('data_key_biometric');
   });
 });
 
 describe('getAutoLockTimeout', () => {
   it('returns default 60 when not set', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
     const result = await storage.getAutoLockTimeout();
     expect(result).toBe(60);
   });
 
   it('returns stored value when valid', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('300');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('300');
     const result = await storage.getAutoLockTimeout();
     expect(result).toBe(300);
   });
 
   it('returns 60 when value is NaN', async () => {
-    jest.mocked(AsyncStorage.getItem).mockResolvedValue('invalid');
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('invalid');
     const result = await storage.getAutoLockTimeout();
     expect(result).toBe(60);
   });
@@ -134,6 +128,34 @@ describe('getAutoLockTimeout', () => {
 describe('setAutoLockTimeout', () => {
   it('stores timeout value', async () => {
     await storage.setAutoLockTimeout(30);
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith('cardvault_auto_lock_timeout', '30');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith('auto_lock_timeout', '30');
+  });
+});
+
+describe('getDataKeyBiometric (native)', () => {
+  it('uses SecureStore with requireAuthentication', async () => {
+    jest.mocked(SecureStore.getItemAsync).mockResolvedValue('biokey');
+    const result = await storage.getDataKeyBiometric();
+    expect(result).toBe('biokey');
+    expect(SecureStore.getItemAsync).toHaveBeenCalledWith(
+      'data_key_biometric',
+      expect.objectContaining({ requireAuthentication: true })
+    );
+  });
+});
+
+describe('setDataKeyBiometric (native)', () => {
+  it('uses SecureStore with requireAuthentication', async () => {
+    await storage.setDataKeyBiometric('key');
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+      'data_key_biometric',
+      'key',
+      expect.objectContaining({ requireAuthentication: true })
+    );
+  });
+
+  it('handles biometric storage failure gracefully', async () => {
+    jest.mocked(SecureStore.setItemAsync).mockRejectedValue(new Error('biometric failed'));
+    await expect(storage.setDataKeyBiometric('key')).resolves.not.toThrow();
   });
 });
