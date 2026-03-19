@@ -73,13 +73,48 @@ export async function encryptData(
 }
 
 /**
+ * Sanitize base64 string: strip whitespace, normalize URL-safe to standard.
+ */
+function sanitizeBase64(input: string): string {
+  if (!input || typeof input !== 'string') return '';
+  let s = input.replace(/\s/g, '');
+  if (s.includes('-') || s.includes('_')) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/');
+  }
+  return s;
+}
+
+/** Encode Uint8Array to base64 string (works on all platforms) */
+function bytesToBase64Safe(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return base64.encode(binary);
+}
+
+/**
  * Decrypt ciphertext with AES-256-GCM
+ * Uses fromParts - Android native fromCombined expects ByteArray but bridge passes string.
+ * fromParts accepts base64 strings (BinaryInput), so we pass base64-encoded parts.
  */
 export async function decryptData(
   ciphertextBase64: string,
   key: AESEncryptionKey
 ): Promise<string> {
-  const sealedData = AESSealedData.fromCombined(ciphertextBase64);
+  const sanitized = sanitizeBase64(ciphertextBase64);
+  if (!sanitized || sanitized.length < 40) {
+    throw new Error('Invalid or truncated ciphertext');
+  }
+  const bytes = base64ToBytes(sanitized);
+  const ivLength = 12;
+  const tagLength = 16;
+  if (bytes.length < ivLength + tagLength) {
+    throw new Error('Invalid or truncated ciphertext');
+  }
+  const ivB64 = bytesToBase64Safe(bytes.slice(0, ivLength));
+  const ciphertextWithTagB64 = bytesToBase64Safe(bytes.slice(ivLength));
+  const sealedData = AESSealedData.fromParts(ivB64, ciphertextWithTagB64, tagLength);
   const decryptedBase64 = await aesDecryptAsync(sealedData, key, {
     output: 'base64',
   });
@@ -98,7 +133,7 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 function base64ToBytes(str: string): Uint8Array {
-  const binary = atob(str);
+  const binary = base64.decode(str);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);

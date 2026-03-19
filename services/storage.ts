@@ -37,11 +37,10 @@ async function getItem(key: string, secureOptions?: object): Promise<string | nu
   if (secureOptions && 'requireAuthentication' in secureOptions) {
     return SecureStore.getItemAsync(key, secureOptions as any);
   }
-  // Use explicit options for read/write consistency across platforms
   const options =
     Platform.OS === 'ios'
       ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
-      : { keychainService: 'key_v1' }; // Android: explicit keychain to match default
+      : undefined;
   return SecureStore.getItemAsync(key, options);
 }
 
@@ -54,11 +53,10 @@ async function setItem(key: string, value: string, secureOptions?: object): Prom
     await SecureStore.setItemAsync(key, value, secureOptions as any);
     return;
   }
-  // Use explicit options for read/write consistency across platforms
   const options =
     Platform.OS === 'ios'
       ? { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }
-      : { keychainService: 'key_v1' }; // Android: explicit keychain to match default
+      : undefined;
   await SecureStore.setItemAsync(key, value, options);
 }
 
