@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cardvault.app"
     },
     "android": {
       "package": "com.cardvault.app",
@@ -43,6 +44,22 @@
         "expo-local-authentication",
         {
           "faceIDPermission": "Allow Card Vault to use Face ID to unlock your cards securely."
+        }
+      ],
+      "expo-sharing",
+      "expo-localization",
+      [
+        "expo-widgets",
+        {
+          "groupIdentifier": "group.com.cardvault.app",
+          "widgets": [
+            {
+              "name": "CardVaultWidget",
+              "displayName": "Card Vault",
+              "description": "Tap to unlock Card Vault",
+              "supportedFamilies": ["systemSmall", "systemMedium", "accessoryCircular", "accessoryRectangular"]
+            }
+          ]
         }
       ]
     ],

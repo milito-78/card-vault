@@ -8,6 +8,8 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { LocaleProvider } from '@/contexts/LocaleContext';
+import { Platform } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,14 +39,24 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    if (Platform.OS === 'ios' && loaded) {
+      import('@/widgets/CardVaultWidget').then(({ default: Widget }) => {
+        Widget.updateSnapshot({ message: 'Tap to unlock' });
+      }).catch(() => {});
+    }
+  }, [loaded]);
+
   if (!loaded) {
     return null;
   }
 
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <LocaleProvider>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </LocaleProvider>
   );
 }
 

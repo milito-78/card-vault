@@ -9,11 +9,12 @@ import {
   Platform,
 } from 'react-native';
 import type { Card } from '@/services/cards';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export interface CardFormProps {
   initialCard?: Card | null;
   onSubmit: (data: Omit<Card, 'id' | 'createdAt'>) => Promise<void>;
-  submitLabel?: string;
+  submitLabel?: string; // e.g. t('cardForm.updateCard') or t('cardForm.saveCard')
 }
 
 function formatCardNumber(value: string) {
@@ -33,8 +34,9 @@ function formatExpDate(value: string) {
 export function CardForm({
   initialCard,
   onSubmit,
-  submitLabel = 'Save Card',
+  submitLabel,
 }: CardFormProps) {
+  const { t } = useLocale();
   const [bankName, setBankName] = useState(initialCard?.bankName ?? '');
   const [cardNumber, setCardNumber] = useState(
     initialCard ? formatCardNumber(initialCard.cardNumber) : ''
@@ -49,20 +51,20 @@ export function CardForm({
   async function handleSave() {
     setError('');
     if (!bankName.trim()) {
-      setError('Bank name is required');
+      setError(t('cardForm.bankNameRequired'));
       return;
     }
     const cleanedNumber = cardNumber.replace(/\D/g, '');
     if (cleanedNumber.length < 13) {
-      setError('Card number is invalid');
+      setError(t('cardForm.cardNumberInvalid'));
       return;
     }
     if (!cvv2.trim()) {
-      setError('CVV is required');
+      setError(t('cardForm.cvvRequired'));
       return;
     }
     if (expDate.replace(/\D/g, '').length !== 4) {
-      setError('Expiry date must be MM/YY');
+      setError(t('cardForm.expiryInvalid'));
       return;
     }
 
@@ -77,7 +79,7 @@ export function CardForm({
         notes: notes.trim(),
       });
     } catch (e) {
-      setError('Failed to save card');
+      setError(t('cardForm.saveFailed'));
     } finally {
       setLoading(false);
     }
@@ -90,7 +92,7 @@ export function CardForm({
     >
       <ScrollView className="flex-1" contentContainerStyle={{ padding: 16 }}>
         <Text className="mb-2 text-sm font-medium text-neutral-400">
-          Bank Name
+          {t('cardForm.bankName')}
         </Text>
         <TextInput
           className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
@@ -102,7 +104,7 @@ export function CardForm({
         />
 
         <Text className="mb-2 text-sm font-medium text-neutral-400">
-          Card Number
+          {t('cardForm.cardNumber')}
         </Text>
         <TextInput
           className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 font-mono text-white"
@@ -117,7 +119,7 @@ export function CardForm({
         <View className="flex-row gap-4">
           <View className="flex-1">
             <Text className="mb-2 text-sm font-medium text-neutral-400">
-              CVV2
+              {t('cardForm.cvv')}
             </Text>
             <TextInput
               className="rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 font-mono text-white"
@@ -131,7 +133,7 @@ export function CardForm({
           </View>
           <View className="flex-1">
             <Text className="mb-2 text-sm font-medium text-neutral-400">
-              Expiry (MM/YY)
+              {t('cardForm.expiry')}
             </Text>
             <TextInput
               className="rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 font-mono text-white"
@@ -146,7 +148,7 @@ export function CardForm({
         </View>
 
         <Text className="mb-2 mt-4 text-sm font-medium text-neutral-400">
-          ATM / Offline Password (optional)
+          {t('cardForm.password')} (optional)
         </Text>
         <TextInput
           className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
@@ -158,7 +160,7 @@ export function CardForm({
         />
 
         <Text className="mb-2 text-sm font-medium text-neutral-400">
-          Notes (optional)
+          {t('cardForm.notes')} (optional)
         </Text>
         <TextInput
           className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
@@ -180,7 +182,7 @@ export function CardForm({
           className="rounded-xl bg-blue-600 py-4 active:bg-blue-700 disabled:opacity-50"
         >
           <Text className="text-center font-semibold text-white">
-            {loading ? 'Saving...' : submitLabel}
+            {loading ? t('cardForm.saving') : (submitLabel ?? t('cardForm.saveCard'))}
           </Text>
         </Pressable>
       </ScrollView>

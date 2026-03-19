@@ -4,8 +4,10 @@ import { SymbolView } from 'expo-symbols';
 import { Tabs } from 'expo-router';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { Logo } from '@/components/Logo';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function TabLayout() {
+  const { t } = useLocale();
   return (
     <Tabs
       screenOptions={{
@@ -24,7 +26,7 @@ export default function TabLayout() {
           headerTitle: () => (
             <View className="flex-row items-center gap-2">
               <Logo size={28} variant="light" />
-              <Text className="text-lg font-bold text-white">Cards</Text>
+              <Text className="text-lg font-bold text-white">{t('cards.title')}</Text>
             </View>
           ),
           tabBarIcon: ({ color }) => (
@@ -47,7 +49,7 @@ export default function TabLayout() {
           headerTitle: () => (
             <View className="flex-row items-center gap-2">
               <Logo size={28} variant="light" />
-              <Text className="text-lg font-bold text-white">Settings</Text>
+              <Text className="text-lg font-bold text-white">{t('settings.title')}</Text>
             </View>
           ),
           tabBarIcon: ({ color }) => (

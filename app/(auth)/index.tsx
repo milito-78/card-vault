@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { Logo } from '@/components/Logo';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocale } from '@/contexts/LocaleContext';
 import { router } from 'expo-router';
 
 export default function LockScreen() {
+  const { t } = useLocale();
   const { width } = useWindowDimensions();
   const contentWidth = Math.min(width - 48, 360);
 
@@ -48,7 +50,7 @@ export default function LockScreen() {
 
   async function handleUnlock() {
     if (pin.length < 6) {
-      setError('PIN must be at least 6 digits');
+      setError(t('auth.pinMinDigits'));
       return;
     }
 
@@ -60,7 +62,7 @@ export default function LockScreen() {
     if (success) {
       router.replace('/(tabs)');
     } else {
-      setError('Wrong PIN');
+      setError(t('auth.wrongPin'));
       setPin('');
     }
   }
@@ -85,9 +87,9 @@ export default function LockScreen() {
             <View accessible accessibilityLabel="Card Vault logo">
               <Logo size={72} />
             </View>
-            <Text className="text-2xl font-bold text-white">Card Vault</Text>
+            <Text className="text-2xl font-bold text-white">{t('appName')}</Text>
             <Text className="text-neutral-400 text-center">
-              Enter your PIN to unlock
+              {t('auth.enterPinToUnlock')}
             </Text>
           </View>
 
@@ -120,7 +122,7 @@ export default function LockScreen() {
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-center font-semibold text-white text-base">
-                  Unlock
+                  {t('auth.unlock')}
                 </Text>
               )}
             </Pressable>
@@ -132,7 +134,7 @@ export default function LockScreen() {
                 className="py-3 active:opacity-70"
               >
                 <Text className="text-blue-400 text-center text-sm">
-                  Use Face ID / Fingerprint
+                  {t('auth.useBiometric')}
                 </Text>
               </Pressable>
             )}

@@ -9,7 +9,12 @@ const KEYS = {
   DATA_KEY_BIOMETRIC: 'data_key_biometric',
   CARDS_ENCRYPTED: 'cards_encrypted',
   AUTO_LOCK_TIMEOUT: 'auto_lock_timeout',
+  SORT_BY: 'sort_by',
+  SORT_ORDER: 'sort_order',
 } as const;
+
+export type SortBy = 'bankName' | 'createdAt';
+export type SortOrder = 'asc' | 'desc';
 
 export const AUTO_LOCK_OPTIONS = [
   { value: 30, label: '30 seconds' },
@@ -122,4 +127,24 @@ export async function getAutoLockTimeout(): Promise<number> {
 
 export async function setAutoLockTimeout(seconds: number): Promise<void> {
   await setItem(KEYS.AUTO_LOCK_TIMEOUT, String(seconds));
+}
+
+export async function getSortPreference(): Promise<{
+  sortBy: SortBy;
+  sortOrder: SortOrder;
+}> {
+  const sortBy = (await getItem(KEYS.SORT_BY)) as SortBy | null;
+  const sortOrder = (await getItem(KEYS.SORT_ORDER)) as SortOrder | null;
+  return {
+    sortBy: sortBy === 'bankName' || sortBy === 'createdAt' ? sortBy : 'createdAt',
+    sortOrder: sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'desc',
+  };
+}
+
+export async function setSortPreference(
+  sortBy: SortBy,
+  sortOrder: SortOrder
+): Promise<void> {
+  await setItem(KEYS.SORT_BY, sortBy);
+  await setItem(KEYS.SORT_ORDER, sortOrder);
 }

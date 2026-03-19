@@ -11,8 +11,10 @@ import { SymbolView } from 'expo-symbols';
 import { getCards, deleteCard, maskCardNumber } from '@/services/cards';
 import type { Card } from '@/services/cards';
 import { useCopyWithClear } from '@/hooks/useCopyWithClear';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function CardDetailScreen() {
+  const { t } = useLocale();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { copyWithClear } = useCopyWithClear();
@@ -60,7 +62,7 @@ export default function CardDetailScreen() {
   if (!card) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">Card not found</Text>
+        <Text className="text-neutral-400">{t('cardDetail.cardNotFound')}</Text>
       </View>
     );
   }
@@ -83,7 +85,7 @@ export default function CardDetailScreen() {
 
       <View className="p-4">
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">Card Number</Text>
+          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.cardNumber')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {revealed.cardNumber
@@ -120,7 +122,7 @@ export default function CardDetailScreen() {
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">CVV2</Text>
+          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.cvv2')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {revealed.cvv2 ? card.cvv2 : '•••'}
@@ -155,21 +157,21 @@ export default function CardDetailScreen() {
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">Expiry Date</Text>
+          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.expiryDate')}</Text>
           <View className="rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">{card.expDate}</Text>
           </View>
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">ATM / Offline Password</Text>
+          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.atmPassword')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {card.password
                 ? revealed.password
                   ? card.password
                   : '••••••••'
-                : 'Not set'}
+                : t('cardDetail.notSet')}
             </Text>
             <View className="flex-row gap-2">
               {card.password ? (
@@ -206,7 +208,7 @@ export default function CardDetailScreen() {
 
         {card.notes ? (
           <View className="mb-4">
-            <Text className="mb-2 text-sm text-neutral-400">Notes</Text>
+            <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.notes')}</Text>
             <View className="flex-row items-start justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
               <Text className="flex-1 text-white">{card.notes}</Text>
               <Pressable
@@ -228,7 +230,7 @@ export default function CardDetailScreen() {
           className="mt-4 rounded-xl border border-red-900/50 bg-red-950/30 py-4 active:bg-red-950/50"
         >
           <Text className="text-center font-semibold text-red-500">
-            Delete Card
+            {t('cardDetail.deleteCard')}
           </Text>
         </Pressable>
       </View>

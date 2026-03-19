@@ -186,6 +186,42 @@ export async function wrapKey(
 }
 
 /**
+ * Derive key from password (alphanumeric) - same as PIN but for backup password.
+ */
+export async function deriveKeyFromPassword(
+  password: string,
+  saltHex: string
+): Promise<Uint8Array> {
+  return deriveKeyFromPin(password, saltHex);
+}
+
+/**
+ * Encrypt plaintext with password-derived key. Used for backup v2.
+ */
+export async function encryptWithPassword(
+  plaintext: string,
+  password: string,
+  saltHex: string
+): Promise<string> {
+  const keyBytes = await deriveKeyFromPassword(password, saltHex);
+  const key = await bytesToAESKey(keyBytes);
+  return encryptData(plaintext, key);
+}
+
+/**
+ * Decrypt ciphertext with password-derived key. Used for backup v2.
+ */
+export async function decryptWithPassword(
+  ciphertextBase64: string,
+  password: string,
+  saltHex: string
+): Promise<string> {
+  const keyBytes = await deriveKeyFromPassword(password, saltHex);
+  const key = await bytesToAESKey(keyBytes);
+  return decryptData(ciphertextBase64, key);
+}
+
+/**
  * Decrypt (unwrap) data key using PIN-derived key
  */
 export async function unwrapKey(

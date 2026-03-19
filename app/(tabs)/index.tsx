@@ -10,17 +10,23 @@ import {
 import { Link, useFocusEffect } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { getCards, maskCardNumber, type Card } from '@/services/cards';
+import * as storage from '@/services/storage';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function CardListScreen() {
+  const { t } = useLocale();
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'bankName' | 'createdAt'>('createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const { lock } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
       loadCards();
+      loadSortPreference();
     }, [])
   );
 
@@ -29,6 +35,12 @@ export default function CardListScreen() {
     const data = await getCards();
     setCards(data);
     setLoading(false);
+  }
+
+  async function loadSortPreference() {
+    const pref = await storage.getSortPreference();
+    setSortBy(pref.sortBy);
+    setSortOrder(pref.sortOrder);
   }
 
   const filteredCards = useMemo(() => {
@@ -43,6 +55,17 @@ export default function CardListScreen() {
     });
   }, [cards, searchQuery]);
 
+  const sortedCards = useMemo(() => {
+    return [...filteredCards].sort((a, b) => {
+      if (sortBy === 'bankName') {
+        const cmp = a.bankName.localeCompare(b.bankName);
+        return sortOrder === 'asc' ? cmp : -cmp;
+      }
+      const cmp = a.createdAt - b.createdAt;
+      return sortOrder === 'asc' ? cmp : -cmp;
+    });
+  }, [filteredCards, sortBy, sortOrder]);
+
   function renderCard({ item }: { item: Card }) {
     return (
       <Link href={`/card/${item.id}`} asChild>
@@ -54,7 +77,7 @@ export default function CardListScreen() {
             {maskCardNumber(item.cardNumber)}
           </Text>
           <Text className="mt-1 text-sm text-neutral-500">
-            Exp: {item.expDate}
+            {t('cards.exp')}: {item.expDate}
           </Text>
         </Pressable>
       </Link>
@@ -72,7 +95,7 @@ export default function CardListScreen() {
   return (
     <View className="flex-1 bg-neutral-900">
       <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
-        <Text className="text-xl font-bold text-white">My Cards</Text>
+        <Text className="text-xl font-bold text-white">{t('cards.myCards')}</Text>
         <View className="flex-row gap-2">
           <Pressable
             onPress={() => lock()}
@@ -86,7 +109,7 @@ export default function CardListScreen() {
           </Pressable>
           <Link href="/card/add" asChild>
             <Pressable className="rounded-lg bg-blue-600 px-4 py-2 active:bg-blue-700">
-              <Text className="font-semibold text-white">+ Add</Text>
+              <Text className="font-semibold text-white">{t('cards.add')}</Text>
             </Pressable>
           </Link>
         </View>
@@ -96,7 +119,7 @@ export default function CardListScreen() {
         <View className="border-b border-neutral-800 px-4 pb-3">
           <TextInput
             className="rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-2 text-white"
-            placeholder="Search by bank name or last 4 digits"
+            placeholder={t('cards.searchPlaceholder')}
             placeholderTextColor="#737373"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -112,20 +135,20 @@ export default function CardListScreen() {
             tintColor="#525252"
           />
           <Text className="mt-4 text-center text-lg font-medium text-white">
-            No cards yet
+            {t('cards.noCards')}
           </Text>
           <Text className="mt-2 text-center text-neutral-400">
-            Add your first card to get started
+            {t('cards.addFirstCard')}
           </Text>
           <Link href="/card/add" asChild>
             <Pressable className="mt-6 rounded-xl bg-blue-600 px-6 py-3 active:bg-blue-700">
-              <Text className="font-semibold text-white">Add Card</Text>
+              <Text className="font-semibold text-white">{t('cards.addCard')}</Text>
             </Pressable>
           </Link>
         </View>
       ) : (
         <FlatList
-          data={filteredCards}
+          data={sortedCards}
           renderItem={renderCard}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 16 }}
@@ -133,7 +156,7 @@ export default function CardListScreen() {
             searchQuery ? (
               <View className="py-8">
                 <Text className="text-center text-neutral-400">
-                  No cards match "{searchQuery}"
+                  {t('cards.noMatch', { query: searchQuery })}
                 </Text>
               </View>
             ) : null

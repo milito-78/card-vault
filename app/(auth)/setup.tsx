@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { Logo } from '@/components/Logo';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocale } from '@/contexts/LocaleContext';
 import { router } from 'expo-router';
 
 export default function SetupScreen() {
+  const { t } = useLocale();
   const { width } = useWindowDimensions();
   const contentWidth = Math.min(width - 48, 360);
 
@@ -26,7 +28,7 @@ export default function SetupScreen() {
 
   async function handleSetPin() {
     if (pin.length < 6) {
-      setError('PIN must be at least 6 digits');
+      setError(t('auth.pinMinDigits'));
       return;
     }
     setStep('confirm');
@@ -36,7 +38,7 @@ export default function SetupScreen() {
 
   async function handleConfirm() {
     if (confirmPin !== pin) {
-      setError('PINs do not match');
+      setError(t('auth.pinsDoNotMatch'));
       return;
     }
 
@@ -66,12 +68,12 @@ export default function SetupScreen() {
               <Logo size={72} />
             </View>
             <Text className="text-2xl font-bold text-white">
-              Create PIN
+              {t('auth.createPin')}
             </Text>
             <Text className="text-neutral-400 text-center">
               {step === 'pin'
-                ? 'Enter a 6-digit PIN to secure your cards'
-                : 'Confirm your PIN'}
+                ? t('auth.enterPinToSecure')
+                : t('auth.confirmPin')}
             </Text>
           </View>
 
@@ -112,7 +114,7 @@ export default function SetupScreen() {
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-center font-semibold text-white text-base">
-                  {step === 'pin' ? 'Continue' : 'Create PIN'}
+                  {step === 'pin' ? t('auth.continue') : t('auth.createPin')}
                 </Text>
               )}
             </Pressable>
@@ -126,7 +128,7 @@ export default function SetupScreen() {
                 }}
                 className="py-3 active:opacity-70"
               >
-                <Text className="text-neutral-400 text-center text-sm">Back</Text>
+                <Text className="text-neutral-400 text-center text-sm">{t('common.back')}</Text>
               </Pressable>
             )}
           </View>

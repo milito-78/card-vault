@@ -3,9 +3,11 @@ import { View, Text } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CardForm } from '@/components/CardForm';
 import { getCards, updateCard } from '@/services/cards';
+import { useLocale } from '@/contexts/LocaleContext';
 import type { Card } from '@/services/cards';
 
 export default function EditCardScreen() {
+  const { t } = useLocale();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [card, setCard] = useState<Card | null>(null);
@@ -30,7 +32,7 @@ export default function EditCardScreen() {
   if (!id) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">Invalid card</Text>
+        <Text className="text-neutral-400">{t('common.invalidCard')}</Text>
       </View>
     );
   }
@@ -38,7 +40,7 @@ export default function EditCardScreen() {
   if (card === null) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">Loading...</Text>
+        <Text className="text-neutral-400">{t('common.loading')}</Text>
       </View>
     );
   }
@@ -47,7 +49,7 @@ export default function EditCardScreen() {
     <CardForm
       initialCard={card}
       onSubmit={handleSubmit}
-      submitLabel="Update Card"
+      submitLabel={t('cardForm.updateCard')}
     />
   );
 }
