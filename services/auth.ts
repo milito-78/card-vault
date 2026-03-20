@@ -99,6 +99,17 @@ export async function unlockWithBiometric(): Promise<boolean> {
   }
 }
 
+export async function enableBiometricStorage(): Promise<boolean> {
+  if (!inMemoryDataKey) return false;
+  try {
+    const dataKeyHex = await inMemoryDataKey.encoded('hex');
+    await storage.setDataKeyBiometric(dataKeyHex);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function changePin(currentPin: string, newPin: string): Promise<boolean> {
   if (!inMemoryDataKey) return false;
 

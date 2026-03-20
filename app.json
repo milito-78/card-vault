@@ -1,7 +1,6 @@
 {
   "expo": {
-    "name": "card-vault",
-    "jsEngine": "hermes",
+    "name": "Card Vault",
     "slug": "card-vault",
     "version": "1.0.0",
     "orientation": "portrait",

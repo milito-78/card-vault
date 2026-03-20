@@ -8,9 +8,11 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  Switch,
 } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { useAuth } from '@/contexts/AuthContext';
+import * as auth from '@/services/auth';
 import { useLocale } from '@/contexts/LocaleContext';
 import { router } from 'expo-router';
 import * as storage from '@/services/storage';
@@ -25,8 +27,10 @@ import { getDebugLogContent } from '@/services/debugLog';
 
 export default function SettingsScreen() {
   const { t, locale, setLocale } = useLocale();
-  const { lock, changePin } = useAuth();
+  const { lock, changePin, refreshBiometricPreference } = useAuth();
   const [autoLockTimeout, setAutoLockTimeout] = useState(60);
+  const [biometricEnabled, setBiometricEnabledState] = useState(true);
+  const [hasBiometricHardware, setHasBiometricHardware] = useState(false);
   const [loadingTimeout, setLoadingTimeout] = useState(true);
   const [sortBy, setSortBy] = useState<SortBy>('createdAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
@@ -52,14 +56,33 @@ export default function SettingsScreen() {
   }, []);
 
   async function loadSettings() {
-    const [timeout, sortPref] = await Promise.all([
+    const [timeout, sortPref, bioEnabled, hasBio] = await Promise.all([
       storage.getAutoLockTimeout(),
       storage.getSortPreference(),
+      storage.getBiometricEnabled(),
+      auth.canUseBiometric(),
     ]);
     setAutoLockTimeout(timeout);
     setSortBy(sortPref.sortBy);
     setSortOrder(sortPref.sortOrder);
+    setBiometricEnabledState(bioEnabled);
+    setHasBiometricHardware(hasBio);
     setLoadingTimeout(false);
+  }
+
+  async function handleBiometricToggle(value: boolean) {
+    if (value) {
+      const stored = await auth.enableBiometricStorage();
+      if (!stored) {
+        Alert.alert(t('settings.biometricEnableFailed'), t('settings.biometricEnableFailedDesc'));
+        return;
+      }
+    } else {
+      await storage.clearDataKeyBiometric();
+    }
+    await storage.setBiometricEnabled(value);
+    setBiometricEnabledState(value);
+    await refreshBiometricPreference();
   }
 
   async function handleSetAutoLock(value: number) {
@@ -261,6 +284,23 @@ export default function SettingsScreen() {
           </Pressable>
         ))}
       </View>
+
+      {hasBiometricHardware ? (
+        <View className="mb-6 flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
+          <View className="flex-1">
+            <Text className="font-sans font-medium text-white">{t('settings.biometricUnlock')}</Text>
+            <Text className="font-sans mt-1 text-sm text-neutral-400">
+              {t('settings.biometricUnlockDesc')}
+            </Text>
+          </View>
+          <Switch
+            value={biometricEnabled}
+            onValueChange={handleBiometricToggle}
+            trackColor={{ false: '#525252', true: '#3b82f6' }}
+            thumbColor="#fff"
+          />
+        </View>
+      ) : null}
 
       <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
         {t('settings.autoLockTimeout')}
@@ -695,20 +735,22 @@ export default function SettingsScreen() {
         <Text className="font-sans text-sm text-neutral-500">
           Card Vault v{Constants.expoConfig?.version ?? '1.0.0'}
         </Text>
-        <Pressable
-          onPress={async () => {
-            const log = getDebugLogContent();
-            if (log) {
-              await Clipboard.setStringAsync(log);
-              Alert.alert('Debug log copied', 'Paste somewhere to share.');
-            } else {
-              Alert.alert('Debug log empty', 'Add a card first, then try again.');
-            }
-          }}
-          className="mt-2 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
-        >
-          <Text className="font-sans text-center text-sm text-neutral-400">Copy debug log</Text>
-        </Pressable>
+        {__DEV__ ? (
+          <Pressable
+            onPress={async () => {
+              const log = getDebugLogContent();
+              if (log) {
+                await Clipboard.setStringAsync(log);
+                Alert.alert('Debug log copied', 'Paste somewhere to share.');
+              } else {
+                Alert.alert('Debug log empty', 'Add a card first, then try again.');
+              }
+            }}
+            className="mt-2 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
+          >
+            <Text className="font-sans text-center text-sm text-neutral-400">Copy debug log</Text>
+          </Pressable>
+        ) : null}
       </View>
     </ScrollView>
   );

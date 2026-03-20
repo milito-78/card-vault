@@ -10,6 +10,7 @@ const KEYS = {
   DATA_KEY_BIOMETRIC: 'data_key_biometric',
   CARDS_ENCRYPTED: 'cards_encrypted',
   AUTO_LOCK_TIMEOUT: 'auto_lock_timeout',
+  BIOMETRIC_ENABLED: 'biometric_enabled',
   SORT_BY: 'sort_by',
   SORT_ORDER: 'sort_order',
   LOCALE: 'locale',
@@ -156,6 +157,16 @@ export async function getAutoLockTimeout(): Promise<number> {
 
 export async function setAutoLockTimeout(seconds: number): Promise<void> {
   await setItem(KEYS.AUTO_LOCK_TIMEOUT, String(seconds));
+}
+
+export async function getBiometricEnabled(): Promise<boolean> {
+  const value = await getItem(KEYS.BIOMETRIC_ENABLED);
+  if (value === null) return true; // default enabled for existing users
+  return value === 'true';
+}
+
+export async function setBiometricEnabled(enabled: boolean): Promise<void> {
+  await setItem(KEYS.BIOMETRIC_ENABLED, enabled ? 'true' : 'false');
 }
 
 export async function getSortPreference(): Promise<{

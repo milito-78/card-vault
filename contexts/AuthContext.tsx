@@ -13,6 +13,7 @@ interface AuthContextType {
   lock: () => void;
   changePin: (currentPin: string, newPin: string) => Promise<boolean>;
   canUseBiometric: boolean;
+  refreshBiometricPreference: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -64,8 +65,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const canBiometric = await auth.canUseBiometric();
-    setCanUseBiometric(canBiometric);
+    const [hardwareEnrolled, biometricEnabled] = await Promise.all([
+      auth.canUseBiometric(),
+      storage.getBiometricEnabled(),
+    ]);
+    setCanUseBiometric(hardwareEnrolled && biometricEnabled);
 
     if (auth.isUnlocked()) {
       setAuthState('unlocked');
@@ -92,6 +96,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return success;
   }
 
+  async function refreshBiometricPreference() {
+    const [hardwareEnrolled, biometricEnabled] = await Promise.all([
+      auth.canUseBiometric(),
+      storage.getBiometricEnabled(),
+    ]);
+    setCanUseBiometric(hardwareEnrolled && biometricEnabled);
+  }
+
   function lock() {
     auth.lock();
     setAuthState('locked');
@@ -107,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         lock,
         changePin: auth.changePin,
         canUseBiometric,
+        refreshBiometricPreference,
       }}
     >
       {children}
