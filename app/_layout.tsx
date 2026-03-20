@@ -2,6 +2,12 @@ import '../global.css';
 import * as Sentry from '@sentry/react-native';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import {
+  Vazirmatn_400Regular,
+  Vazirmatn_500Medium,
+  Vazirmatn_600SemiBold,
+  Vazirmatn_700Bold,
+} from '@expo-google-fonts/vazirmatn';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -38,6 +44,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Vazirmatn_400Regular,
+    Vazirmatn_500Medium,
+    Vazirmatn_600SemiBold,
+    Vazirmatn_700Bold,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -70,11 +80,11 @@ export default function RootLayout() {
         return (
           <SafeAreaProvider>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0a0a0a', padding: 24 }}>
-              <Text style={{ color: '#fff', fontSize: 18, marginBottom: 16, textAlign: 'center' }}>
+              <Text style={{ color: '#fff', fontSize: 18, marginBottom: 16, textAlign: 'center', fontFamily: 'Vazirmatn_400Regular' }}>
                 Something went wrong. The error has been reported.
               </Text>
               <Pressable onPress={resetError} style={{ backgroundColor: '#3b82f6', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 }}>
-                <Text style={{ color: '#fff', fontWeight: '600' }}>Try again</Text>
+                <Text style={{ color: '#fff', fontWeight: '600', fontFamily: 'Vazirmatn_400Regular' }}>Try again</Text>
               </Pressable>
             </View>
           </SafeAreaProvider>

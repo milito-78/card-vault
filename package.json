@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@expo-google-fonts/vazirmatn": "^0.4.1",
     "@expo/ui": "~55.0.5",
     "@noble/hashes": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",

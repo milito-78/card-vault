@@ -70,7 +70,7 @@ export default function CardDetailScreen() {
   if (!card) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">{t('cardDetail.cardNotFound')}</Text>
+        <Text className="font-sans text-neutral-400">{t('cardDetail.cardNotFound')}</Text>
       </View>
     );
   }
@@ -83,7 +83,7 @@ export default function CardDetailScreen() {
       <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
         <View className="flex-row items-center gap-3">
           <BankLogo cardNumber={card.cardNumber} size={48} />
-          <Text className="text-xl font-bold text-white">{card.bankName}</Text>
+          <Text className="font-sans text-xl font-bold text-white">{card.bankName}</Text>
         </View>
         <Pressable
           onPress={() => router.push(`/card/${id}/edit`)}
@@ -99,7 +99,7 @@ export default function CardDetailScreen() {
 
       <View className="p-4">
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.cardNumber')}</Text>
+          <Text className="font-sans mb-2 text-sm text-neutral-400">{t('cardDetail.cardNumber')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {revealed.cardNumber
@@ -136,7 +136,7 @@ export default function CardDetailScreen() {
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.cvv2')}</Text>
+          <Text className="font-sans mb-2 text-sm text-neutral-400">{t('cardDetail.cvv2')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {revealed.cvv2 ? card.cvv2 : '•••'}
@@ -171,14 +171,14 @@ export default function CardDetailScreen() {
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.expiryDate')}</Text>
+          <Text className="font-sans mb-2 text-sm text-neutral-400">{t('cardDetail.expiryDate')}</Text>
           <View className="rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">{card.expDate}</Text>
           </View>
         </View>
 
         <View className="mb-4">
-          <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.atmPassword')}</Text>
+          <Text className="font-sans mb-2 text-sm text-neutral-400">{t('cardDetail.atmPassword')}</Text>
           <View className="flex-row items-center justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
             <Text className="font-mono text-lg text-white">
               {card.password
@@ -222,9 +222,9 @@ export default function CardDetailScreen() {
 
         {card.notes ? (
           <View className="mb-4">
-            <Text className="mb-2 text-sm text-neutral-400">{t('cardDetail.notes')}</Text>
+            <Text className="font-sans mb-2 text-sm text-neutral-400">{t('cardDetail.notes')}</Text>
             <View className="flex-row items-start justify-between rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-              <Text className="flex-1 text-white">{card.notes}</Text>
+              <Text className="font-sans flex-1 text-white">{card.notes}</Text>
               <Pressable
                 onPress={() => handleCopy(card.notes, 'Notes')}
                 className="rounded-lg px-3 py-2 active:bg-neutral-700"
@@ -243,7 +243,7 @@ export default function CardDetailScreen() {
           onPress={handleDelete}
           className="mt-4 rounded-xl border border-red-900/50 bg-red-950/30 py-4 active:bg-red-950/50"
         >
-          <Text className="text-center font-semibold text-red-500">
+          <Text className="font-sans text-center font-semibold text-red-500">
             {t('cardDetail.deleteCard')}
           </Text>
         </Pressable>

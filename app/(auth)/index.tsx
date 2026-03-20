@@ -94,15 +94,15 @@ export default function LockScreen() {
             <View accessible accessibilityLabel="Card Vault logo">
               <Logo size={72} />
             </View>
-            <Text className="text-2xl font-bold text-white">{t('appName')}</Text>
-            <Text className="text-neutral-400 text-center">
+            <Text className="font-sans text-2xl font-bold text-white">{t('appName')}</Text>
+            <Text className="font-sans text-neutral-400 text-center">
               {t('auth.enterPinToUnlock')}
             </Text>
           </View>
 
           <View className="gap-4">
             <TextInput
-              className="rounded-xl border border-neutral-700 bg-neutral-800/80 px-4 py-4 text-center text-xl text-white"
+              className="font-sans rounded-xl border border-neutral-700 bg-neutral-800/80 px-4 py-4 text-center text-xl text-white"
               placeholder="••••••"
               placeholderTextColor="#737373"
               value={pin}
@@ -117,7 +117,7 @@ export default function LockScreen() {
             />
 
             {error ? (
-              <Text className="text-red-500 text-center text-sm">{error}</Text>
+              <Text className="font-sans text-red-500 text-center text-sm">{error}</Text>
             ) : null}
 
             <Pressable
@@ -129,7 +129,7 @@ export default function LockScreen() {
               {loading ? (
                 <ActivityIndicator color="white" />
               ) : (
-                <Text className="text-center font-semibold text-white text-base">
+                <Text className="font-sans text-center font-semibold text-white text-base">
                   {t('auth.unlock')}
                 </Text>
               )}
@@ -142,7 +142,7 @@ export default function LockScreen() {
                 className="py-3 active:opacity-70"
                 style={{ minHeight: 44 }}
               >
-                <Text className="text-blue-400 text-center text-sm">
+                <Text className="font-sans text-blue-400 text-center text-sm">
                   {t('auth.useBiometric')}
                 </Text>
               </Pressable>

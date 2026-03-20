@@ -79,13 +79,13 @@ export default function CardListScreen() {
         <Pressable className="mb-3 flex-row items-center gap-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:opacity-80">
           <BankLogo cardNumber={item.cardNumber} size={44} />
           <View className="flex-1">
-          <Text className="text-lg font-semibold text-white">
+          <Text className="font-sans text-lg font-semibold text-white">
             {item.bankName}
           </Text>
           <Text className="mt-1 font-mono text-neutral-400">
             {maskCardNumber(item.cardNumber)}
           </Text>
-          <Text className="mt-1 text-sm text-neutral-500">
+          <Text className="font-sans mt-1 text-sm text-neutral-500">
             {t('cards.exp')}: {item.expDate}
           </Text>
           </View>
@@ -105,7 +105,7 @@ export default function CardListScreen() {
   return (
     <View className="flex-1 bg-neutral-900">
       <View className="flex-row items-center justify-between border-b border-neutral-800 px-4 py-4">
-        <Text className="text-xl font-bold text-white">{t('cards.myCards')}</Text>
+        <Text className="font-sans text-xl font-bold text-white">{t('cards.myCards')}</Text>
         <View className="flex-row gap-2">
           <Pressable
             onPress={() => lock()}
@@ -119,7 +119,7 @@ export default function CardListScreen() {
           </Pressable>
           <Link href="/card/add" asChild>
             <Pressable className="rounded-lg bg-blue-600 px-4 py-2 active:bg-blue-700">
-              <Text className="font-semibold text-white">{t('cards.add')}</Text>
+              <Text className="font-sans font-semibold text-white">{t('cards.add')}</Text>
             </Pressable>
           </Link>
         </View>
@@ -128,7 +128,7 @@ export default function CardListScreen() {
       {cards.length > 0 ? (
         <View className="border-b border-neutral-800 px-4 pb-3">
           <TextInput
-            className="rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-2 text-white"
+            className="font-sans rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-2 text-white"
             placeholder={t('cards.searchPlaceholder')}
             placeholderTextColor="#737373"
             value={searchQuery}
@@ -144,15 +144,15 @@ export default function CardListScreen() {
             size={64}
             tintColor="#525252"
           />
-          <Text className="mt-4 text-center text-lg font-medium text-white">
+          <Text className="font-sans mt-4 text-center text-lg font-medium text-white">
             {t('cards.noCards')}
           </Text>
-          <Text className="mt-2 text-center text-neutral-400">
+          <Text className="font-sans mt-2 text-center text-neutral-400">
             {t('cards.addFirstCard')}
           </Text>
           <Link href="/card/add" asChild>
             <Pressable className="mt-6 rounded-xl bg-blue-600 px-6 py-3 active:bg-blue-700">
-              <Text className="font-semibold text-white">{t('cards.addCard')}</Text>
+              <Text className="font-sans font-semibold text-white">{t('cards.addCard')}</Text>
             </Pressable>
           </Link>
         </View>
@@ -165,7 +165,7 @@ export default function CardListScreen() {
           ListEmptyComponent={
             searchQuery ? (
               <View className="py-8">
-                <Text className="text-center text-neutral-400">
+                <Text className="font-sans text-center text-neutral-400">
                   {t('cards.noMatch', { query: searchQuery })}
                 </Text>
               </View>

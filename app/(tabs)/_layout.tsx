@@ -26,7 +26,7 @@ export default function TabLayout() {
           headerTitle: () => (
             <View className="flex-row items-center gap-2">
               <Logo size={28} variant="light" />
-              <Text className="text-lg font-bold text-white">{t('cards.title')}</Text>
+              <Text className="font-sans text-lg font-bold text-white">{t('cards.title')}</Text>
             </View>
           ),
           tabBarIcon: ({ color }) => (
@@ -49,7 +49,7 @@ export default function TabLayout() {
           headerTitle: () => (
             <View className="flex-row items-center gap-2">
               <Logo size={28} variant="light" />
-              <Text className="text-lg font-bold text-white">{t('settings.title')}</Text>
+              <Text className="font-sans text-lg font-bold text-white">{t('settings.title')}</Text>
             </View>
           ),
           tabBarIcon: ({ color }) => (

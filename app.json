@@ -4,7 +4,7 @@
     "slug": "card-vault",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/app-icon-square.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "cardvault",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -15,18 +15,18 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.cardvault.app",
-      "icon": "./assets/images/app-icon-square.png",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.cardvault.app",
-      "icon": "./assets/images/app-icon-square.png",
+      "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/app-icon-square.png",
-        "monochromeImage": "./assets/images/app-icon-square.png"
+        "foregroundImage": "./assets/images/foreground.png",
+        "monochromeImage": "./assets/images/foreground.png"
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
@@ -73,7 +73,8 @@
             }
           ]
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

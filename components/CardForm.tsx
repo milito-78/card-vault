@@ -95,11 +95,11 @@ export function CardForm({
           contentContainerStyle={{ padding: 16 }}
           keyboardShouldPersistTaps="handled"
         >
-        <Text className="mb-2 text-sm font-medium text-neutral-400">
+        <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
           {t('cardForm.bankName')}
         </Text>
         <TextInput
-          className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
+          className="font-sans mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
           placeholder="e.g. Bank Melli"
           placeholderTextColor="#737373"
           value={bankName}
@@ -107,7 +107,7 @@ export function CardForm({
           autoCapitalize="words"
         />
 
-        <Text className="mb-2 text-sm font-medium text-neutral-400">
+        <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
           {t('cardForm.cardNumber')}
         </Text>
         <TextInput
@@ -122,7 +122,7 @@ export function CardForm({
 
         <View className="flex-row gap-4">
           <View className="flex-1">
-            <Text className="mb-2 text-sm font-medium text-neutral-400">
+            <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
               {t('cardForm.cvv')}
             </Text>
             <TextInput
@@ -136,7 +136,7 @@ export function CardForm({
             />
           </View>
           <View className="flex-1">
-            <Text className="mb-2 text-sm font-medium text-neutral-400">
+            <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
               {t('cardForm.expiry')}
             </Text>
             <TextInput
@@ -151,11 +151,11 @@ export function CardForm({
           </View>
         </View>
 
-        <Text className="mb-2 mt-4 text-sm font-medium text-neutral-400">
+        <Text className="font-sans mb-2 mt-4 text-sm font-medium text-neutral-400">
           {t('cardForm.password')} (optional)
         </Text>
         <TextInput
-          className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
+          className="font-sans mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
           placeholder="e.g. ATM PIN"
           placeholderTextColor="#737373"
           value={password}
@@ -163,11 +163,11 @@ export function CardForm({
           secureTextEntry
         />
 
-        <Text className="mb-2 text-sm font-medium text-neutral-400">
+        <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
           {t('cardForm.notes')} (optional)
         </Text>
         <TextInput
-          className="mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
+          className="font-sans mb-4 rounded-xl border border-neutral-600 bg-neutral-800 px-4 py-3 text-white"
           placeholder="e.g. account number, extra info"
           placeholderTextColor="#737373"
           value={notes}
@@ -177,7 +177,7 @@ export function CardForm({
         />
 
         {error ? (
-          <Text className="mb-4 text-red-500">{error}</Text>
+          <Text className="font-sans mb-4 text-red-500">{error}</Text>
         ) : null}
 
         <Pressable
@@ -185,7 +185,7 @@ export function CardForm({
           disabled={loading}
           className="rounded-xl bg-blue-600 py-4 active:bg-blue-700 disabled:opacity-50"
         >
-          <Text className="text-center font-semibold text-white">
+          <Text className="font-sans text-center font-semibold text-white">
             {loading ? t('cardForm.saving') : (submitLabel ?? t('cardForm.saveCard'))}
           </Text>
         </Pressable>

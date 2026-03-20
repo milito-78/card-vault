@@ -229,9 +229,9 @@ export default function SettingsScreen() {
         className="flex-1 bg-neutral-900 p-4"
         keyboardShouldPersistTaps="handled"
       >
-      <Text className="mb-6 text-xl font-bold text-white">{t('settings.title')}</Text>
+      <Text className="font-sans mb-6 text-xl font-bold text-white">{t('settings.title')}</Text>
 
-      <Text className="mb-2 text-sm font-medium text-neutral-400">
+      <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
         {t('settings.language')}
       </Text>
       <View className="mb-6 flex-row flex-wrap gap-2">
@@ -262,7 +262,7 @@ export default function SettingsScreen() {
         ))}
       </View>
 
-      <Text className="mb-2 text-sm font-medium text-neutral-400">
+      <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
         {t('settings.autoLockTimeout')}
       </Text>
       <View className="mb-6 flex-row flex-wrap gap-2">
@@ -289,7 +289,7 @@ export default function SettingsScreen() {
         ))}
       </View>
 
-      <Text className="mb-2 text-sm font-medium text-neutral-400">
+      <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
         {t('settings.sortBy')}
       </Text>
       <View className="mb-6 flex-row flex-wrap gap-2">
@@ -320,7 +320,7 @@ export default function SettingsScreen() {
           </Pressable>
         ))}
       </View>
-      <Text className="mb-2 text-sm font-medium text-neutral-400">
+      <Text className="font-sans mb-2 text-sm font-medium text-neutral-400">
         {t('settings.sortOrder')}
       </Text>
       <View className="mb-6 flex-row flex-wrap gap-2">
@@ -358,14 +358,14 @@ export default function SettingsScreen() {
           onPress={() => setChangePinMode(true)}
           className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:bg-neutral-700"
         >
-          <Text className="font-medium text-white">{t('settings.changePin')}</Text>
-          <Text className="mt-1 text-sm text-neutral-400">
+          <Text className="font-sans font-medium text-white">{t('settings.changePin')}</Text>
+          <Text className="font-sans mt-1 text-sm text-neutral-400">
             {t('settings.changePinDesc')}
           </Text>
         </Pressable>
       ) : (
         <View className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-          <Text className="mb-3 font-medium text-white">{t('settings.changePin')}</Text>
+          <Text className="font-sans mb-3 font-medium text-white">{t('settings.changePin')}</Text>
           <TextInput
             className="mb-2 rounded-lg border border-neutral-600 bg-neutral-900 px-4 py-3 text-white"
             placeholder={t('settings.currentPin')}
@@ -403,14 +403,14 @@ export default function SettingsScreen() {
             secureTextEntry
           />
           {pinError ? (
-            <Text className="mb-2 text-sm text-red-500">{pinError}</Text>
+            <Text className="font-sans mb-2 text-sm text-red-500">{pinError}</Text>
           ) : null}
           <View className="flex-row gap-2">
             <Pressable
               onPress={handleChangePin}
               className="flex-1 rounded-lg bg-blue-600 py-2 active:bg-blue-700"
             >
-              <Text className="text-center font-medium text-white">
+              <Text className="font-sans text-center font-medium text-white">
                 {t('settings.changePin')}
               </Text>
             </Pressable>
@@ -424,7 +424,7 @@ export default function SettingsScreen() {
               }}
               className="flex-1 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
             >
-              <Text className="text-center font-medium text-neutral-300">
+              <Text className="font-sans text-center font-medium text-neutral-300">
                 {t('settings.cancel')}
               </Text>
             </Pressable>
@@ -437,14 +437,14 @@ export default function SettingsScreen() {
           onPress={() => setExportMode(true)}
           className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:bg-neutral-700"
         >
-          <Text className="font-medium text-white">{t('settings.exportBackup')}</Text>
-          <Text className="mt-1 text-sm text-neutral-400">
+          <Text className="font-sans font-medium text-white">{t('settings.exportBackup')}</Text>
+          <Text className="font-sans mt-1 text-sm text-neutral-400">
             {t('settings.exportBackupDesc')}
           </Text>
         </Pressable>
       ) : (
         <View className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-          <Text className="mb-3 font-medium text-white">{t('settings.exportBackup')}</Text>
+          <Text className="font-sans mb-3 font-medium text-white">{t('settings.exportBackup')}</Text>
           <View className="mb-3 flex-row gap-2">
             <Pressable
               onPress={() => {
@@ -489,7 +489,7 @@ export default function SettingsScreen() {
               </Text>
             </Pressable>
           </View>
-          <Text className="mb-2 text-sm text-neutral-400">
+          <Text className="font-sans mb-2 text-sm text-neutral-400">
             {exportUseBackupPassword
               ? t('settings.enterBackupPasswordToExport')
               : t('settings.enterPinToExport')}
@@ -537,7 +537,7 @@ export default function SettingsScreen() {
             />
           )}
           {backupError ? (
-            <Text className="mb-2 text-sm text-red-500">{backupError}</Text>
+            <Text className="font-sans mb-2 text-sm text-red-500">{backupError}</Text>
           ) : null}
           <View className="flex-row gap-2">
             <Pressable
@@ -551,7 +551,7 @@ export default function SettingsScreen() {
               }
               className="flex-1 rounded-lg bg-blue-600 py-2 active:bg-blue-700 disabled:opacity-50"
             >
-              <Text className="text-center font-medium text-white">
+              <Text className="font-sans text-center font-medium text-white">
                 {backupLoading ? t('settings.exporting') : t('settings.exportButton')}
               </Text>
             </Pressable>
@@ -566,7 +566,7 @@ export default function SettingsScreen() {
               disabled={backupLoading}
               className="flex-1 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
             >
-              <Text className="text-center font-medium text-neutral-300">
+              <Text className="font-sans text-center font-medium text-neutral-300">
                 {t('settings.cancel')}
               </Text>
             </Pressable>
@@ -579,17 +579,17 @@ export default function SettingsScreen() {
           onPress={startImport}
           className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:bg-neutral-700"
         >
-          <Text className="font-medium text-white">Import Backup</Text>
-          <Text className="mt-1 text-sm text-neutral-400">
+          <Text className="font-sans font-medium text-white">Import Backup</Text>
+          <Text className="font-sans mt-1 text-sm text-neutral-400">
             Restore from encrypted backup file
           </Text>
         </Pressable>
       ) : (
         <View className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-          <Text className="mb-3 font-medium text-white">{t('settings.importBackup')}</Text>
+          <Text className="font-sans mb-3 font-medium text-white">{t('settings.importBackup')}</Text>
           {!importFileContent ? (
             <>
-              <Text className="mb-2 text-sm text-neutral-400">
+              <Text className="font-sans mb-2 text-sm text-neutral-400">
                 {t('settings.pickFileFirst')}
               </Text>
               <Pressable
@@ -597,14 +597,14 @@ export default function SettingsScreen() {
                 disabled={backupLoading}
                 className="mb-2 rounded-lg bg-blue-600 py-2 active:bg-blue-700 disabled:opacity-50"
               >
-                <Text className="text-center font-medium text-white">
+                <Text className="font-sans text-center font-medium text-white">
                   Pick Backup File
                 </Text>
               </Pressable>
             </>
           ) : (
             <>
-              <Text className="mb-2 text-sm text-neutral-400">
+              <Text className="font-sans mb-2 text-sm text-neutral-400">
                 {importVersion === 2
                   ? t('settings.enterBackupPasswordToImport')
                   : t('settings.enterPinToImport')}
@@ -639,7 +639,7 @@ export default function SettingsScreen() {
                   }
                   className="flex-1 rounded-lg bg-blue-600 py-2 active:bg-blue-700 disabled:opacity-50"
                 >
-                  <Text className="text-center font-medium text-white">
+                  <Text className="font-sans text-center font-medium text-white">
                     {backupLoading ? t('settings.importing') : 'Import'}
                   </Text>
                 </Pressable>
@@ -653,7 +653,7 @@ export default function SettingsScreen() {
                   disabled={backupLoading}
                   className="rounded-lg border border-neutral-600 px-3 py-2 active:bg-neutral-700"
                 >
-                  <Text className="text-center font-medium text-neutral-300">
+                  <Text className="font-sans text-center font-medium text-neutral-300">
                     Change File
                   </Text>
                 </Pressable>
@@ -661,7 +661,7 @@ export default function SettingsScreen() {
             </>
           )}
           {backupError ? (
-            <Text className="mb-2 mt-2 text-sm text-red-500">{backupError}</Text>
+            <Text className="font-sans mb-2 mt-2 text-sm text-red-500">{backupError}</Text>
           ) : null}
           <Pressable
             onPress={() => {
@@ -674,7 +674,7 @@ export default function SettingsScreen() {
             disabled={backupLoading}
             className="mt-2 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
           >
-            <Text className="text-center font-medium text-neutral-300">
+            <Text className="font-sans text-center font-medium text-neutral-300">
               {t('settings.cancel')}
             </Text>
           </Pressable>
@@ -685,14 +685,14 @@ export default function SettingsScreen() {
         onPress={handleLock}
         className="mb-6 rounded-xl border border-neutral-700 bg-neutral-800 p-4 active:bg-neutral-700"
       >
-        <Text className="font-medium text-white">{t('settings.lockApp')}</Text>
-        <Text className="mt-1 text-sm text-neutral-400">
+        <Text className="font-sans font-medium text-white">{t('settings.lockApp')}</Text>
+        <Text className="font-sans mt-1 text-sm text-neutral-400">
           {t('settings.lockAppDesc')}
         </Text>
       </Pressable>
 
       <View className="mt-4">
-        <Text className="text-sm text-neutral-500">
+        <Text className="font-sans text-sm text-neutral-500">
           Card Vault v{Constants.expoConfig?.version ?? '1.0.0'}
         </Text>
         <Pressable
@@ -707,7 +707,7 @@ export default function SettingsScreen() {
           }}
           className="mt-2 rounded-lg border border-neutral-600 py-2 active:bg-neutral-700"
         >
-          <Text className="text-center text-sm text-neutral-400">Copy debug log</Text>
+          <Text className="font-sans text-center text-sm text-neutral-400">Copy debug log</Text>
         </Pressable>
       </View>
     </ScrollView>

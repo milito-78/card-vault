@@ -67,10 +67,10 @@ export default function SetupScreen() {
             <View accessible accessibilityLabel="Card Vault logo">
               <Logo size={72} />
             </View>
-            <Text className="text-2xl font-bold text-white">
+            <Text className="font-sans text-2xl font-bold text-white">
               {t('auth.createPin')}
             </Text>
-            <Text className="text-neutral-400 text-center">
+            <Text className="font-sans text-neutral-400 text-center">
               {step === 'pin'
                 ? t('auth.enterPinToSecure')
                 : t('auth.confirmPin')}
@@ -79,7 +79,7 @@ export default function SetupScreen() {
 
           <View className="gap-4">
             <TextInput
-              className="rounded-xl border border-neutral-700 bg-neutral-800/80 px-4 py-4 text-center text-xl text-white"
+              className="font-sans rounded-xl border border-neutral-700 bg-neutral-800/80 px-4 py-4 text-center text-xl text-white"
               placeholder="••••••"
               placeholderTextColor="#737373"
               value={step === 'pin' ? pin : confirmPin}
@@ -99,7 +99,7 @@ export default function SetupScreen() {
             />
 
             {error ? (
-              <Text className="text-red-500 text-center text-sm">{error}</Text>
+              <Text className="font-sans text-red-500 text-center text-sm">{error}</Text>
             ) : null}
 
             <Pressable
@@ -113,7 +113,7 @@ export default function SetupScreen() {
               {loading ? (
                 <ActivityIndicator color="white" />
               ) : (
-                <Text className="text-center font-semibold text-white text-base">
+                <Text className="font-sans text-center font-semibold text-white text-base">
                   {step === 'pin' ? t('auth.continue') : t('auth.createPin')}
                 </Text>
               )}
@@ -128,7 +128,7 @@ export default function SetupScreen() {
                 }}
                 className="py-3 active:opacity-70"
               >
-                <Text className="text-neutral-400 text-center text-sm">{t('common.back')}</Text>
+                <Text className="font-sans text-neutral-400 text-center text-sm">{t('common.back')}</Text>
               </Pressable>
             )}
           </View>

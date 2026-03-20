@@ -35,7 +35,7 @@ export default function EditCardScreen() {
   if (!id) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">{t('common.invalidCard')}</Text>
+        <Text className="font-sans text-neutral-400">{t('common.invalidCard')}</Text>
       </View>
     );
   }
@@ -43,7 +43,7 @@ export default function EditCardScreen() {
   if (card === null) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-900">
-        <Text className="text-neutral-400">{t('common.loading')}</Text>
+        <Text className="font-sans text-neutral-400">{t('common.loading')}</Text>
       </View>
     );
   }
